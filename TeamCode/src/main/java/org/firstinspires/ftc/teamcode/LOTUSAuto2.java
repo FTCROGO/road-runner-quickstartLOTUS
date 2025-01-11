@@ -1,36 +1,34 @@
 
-package org.firstinspires.ftc.teamcode.teleops;
-
-import androidx.annotation.NonNull;
+package org.firstinspires.ftc.teamcode;
 
 // RR-specific imports
+
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-
-// Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Config
-@Autonomous(name = "LOTUSAuto", group = "Autonomous")
-public class LOTUSAuto extends LinearOpMode {
+@Autonomous(name = "LOTUSAuto2", group = "Autonomous")
+public class LOTUSAuto2 extends LinearOpMode {
     double startPosition;
+    public DcMotor  mArm = null;
 
     @Override
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(-24, 72, Math.toRadians(180));
+        Pose2d initialPose = new Pose2d(0, 66   , Math.toRadians(270));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+
+        mArm = hardwareMap.get(DcMotor.class, "mArm");
+        mArm.setDirection(DcMotor.Direction.REVERSE);
+        mArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 //        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
 //                .lineToX(-72);
@@ -64,8 +62,13 @@ public class LOTUSAuto extends LinearOpMode {
 //                .strafeTo(new Vector2d(-72, 72))
 //                .build();
         TrajectoryActionBuilder tab = drive.actionBuilder(initialPose)
-                .lineToX(-72);
-        //.strafeTo(new Vector2d(-72, 72));
+                .lineToY(16)
+                .turn(Math.toRadians(-90))
+                .lineToX(-24);
+                //.build();
+
+
+                //.strafeTo(new Vector2d(0, 14));
 //                .build();
 
         if (isStopRequested())
@@ -79,7 +82,13 @@ public class LOTUSAuto extends LinearOpMode {
 //        } else {
 //            trajectoryActionChosen = tab3.build();
 //        }
+
         waitForStart();
+
+        mArm.setPower(0.4);
+        mArm.setTargetPosition(1800);
+        mArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         Actions.runBlocking(
                 new SequentialAction(
                         tab.build()));
