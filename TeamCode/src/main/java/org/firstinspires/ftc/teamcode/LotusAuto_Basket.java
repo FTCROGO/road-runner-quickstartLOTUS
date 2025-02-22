@@ -22,7 +22,13 @@ public class LotusAuto_Basket extends LinearOpMode {
     double startPosition;
     public DcMotor  mArm = null;
     public DcMotor  mLS = null;
-    public Servo    Intake = null;
+    public Servo    claw = null;
+
+    public Servo    ROTclaw=null;
+
+
+    double ROTclawOffset = 0.45;
+
 
     @Override
     public void runOpMode() {
@@ -31,7 +37,9 @@ public class LotusAuto_Basket extends LinearOpMode {
 
         mArm = hardwareMap.get(DcMotor.class, "mArm");
         mLS = hardwareMap.get(DcMotor.class, "mLS");
-        Intake = hardwareMap.get(Servo.class, "Intake");
+        claw = hardwareMap.get(Servo.class, "claw");
+        ROTclaw = hardwareMap.get(Servo.class, "ROTclaw");
+
 
         mArm.setDirection(DcMotor.Direction.REVERSE);
         mLS.setDirection(DcMotor.Direction.REVERSE);
@@ -44,7 +52,7 @@ public class LotusAuto_Basket extends LinearOpMode {
         mArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        Intake.setPosition(0.5);
+        //claw.setPosition(0.5);
 
 //        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
 //                .lineToX(-72);
@@ -78,9 +86,9 @@ public class LotusAuto_Basket extends LinearOpMode {
 //                .strafeTo(new Vector2d(-72, 72))
 //                .build();
         TrajectoryActionBuilder tab = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(45, 50))
-                .turn(Math.toRadians(140))
-                .strafeTo(new Vector2d(65, 65));
+                .strafeTo(new Vector2d(33, 60))
+                .turn(Math.toRadians(145))
+                .strafeTo(new Vector2d(39, 70));
 //                .lineToY(40)
 //                .turn(Math.toRadians(145))
 //                .lineToX(-24);
@@ -109,20 +117,27 @@ public class LotusAuto_Basket extends LinearOpMode {
         mArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         mLS.setPower(1);
-        mLS.setTargetPosition(20000);
+        mLS.setTargetPosition(22836);
         mLS.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        ROTclaw.setPosition(0.7);
+
         sleep(10000);
+
 
         Actions.runBlocking(
                 new SequentialAction(
                         tab.build()));
                     //trajectoryActionChosen,
-//                    trajectoryActionCloseOut));
+//                    trajectoryActionCloseOut));y
 
 
-        Intake.setPosition(1);
 
-        sleep(500);
+        //claw.setPosition(0.8);
+        claw.setPosition(0);
+        sleep(3000);
+
+
+
     }
 }
