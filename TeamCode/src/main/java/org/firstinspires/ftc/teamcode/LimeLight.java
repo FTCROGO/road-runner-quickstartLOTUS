@@ -56,7 +56,7 @@ public class LimeLight extends LinearOpMode {
                     }
                 }
 
-                if (distance < 1 && distance > 0.8) {
+                if (distance < 1 && distance > 0.9) {
                     led.setPosition(0.5);
                 }
 
